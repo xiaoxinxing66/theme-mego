@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theme Mego - AI Ready Halo Theme</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 自定义动画 */
+        .cursor-blink { animation: blink 1s step-end infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* 玻璃拟态效果 */
+        .glass-effect {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background-color: #0f172a; /* Slate 900 */
+            color: #e2e8f0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* 滚动条美化 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col relative overflow-x-hidden">
+
+    <!-- 背景氛围光 -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-600/20 blur-[120px] animate-pulse"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-600/20 blur-[120px] animate-pulse" style="animation-delay: 2s;"></div>
+    </div>
+
+    <!-- 导航栏 -->
+    <nav class="w-full py-6 px-6 md:px-12 flex justify-between items-center glass-effect sticky top-0 z-50">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">M</div>
+            <span class="text-xl font-bold tracking-tight">THEME MEGO</span>
+        </div>
+        <div class="hidden md:flex space-x-8 text-sm font-medium text-gray-400">
+            <a href="https://github.com/w-flac/theme-mego" target="_blank" class="hover:text-white transition-colors">GitHub</a>
+            <a href="https://halo.run" target="_blank" class="hover:text-white transition-colors">Halo</a>
+            <span class="text-gray-600">|</span>
+            <span class="text-blue-400 cursor-default">Dev Mode</span>
+        </div>
+    </nav>
+
+    <!-- 主体内容 -->
+    <main class="flex-grow container mx-auto px-6 md:px-12 py-12 md:py-20 flex flex-col lg:flex-row items-center gap-16">
+
+        <!-- 左侧：介绍文案 -->
+        <div class="lg:w-1/2 space-y-8 z-10">
+            <div class="inline-flex items-center px-4 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-xs font-bold tracking-wide uppercase">
+                <i class="fas fa-robot mr-2"></i> AI-Powered Showcase
+            </div>
+
+            <h1 class="text-5xl md:text-6xl font-extrabold leading-tight">
+                不仅仅是一个 <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 animate-gradient">Halo 主题</span>
+            </h1>
+
+            <p class="text-lg text-gray-400 leading-relaxed max-w-xl">
+                你好，HR！👋 <br>
+                这是 <strong>Theme Mego</strong> 的开发预览页。我在这里融合了 Tailwind CSS 的灵活性与 Thymeleaf 的服务端渲染能力。
+                <br>右侧的 AI 助手将为您解读这个项目的技术亮点。
+            </p>
+
+            <div class="flex flex-wrap gap-4 pt-4">
+                <a href="https://github.com/w-flac/theme-mego" target="_blank" class="px-8 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all shadow-lg shadow-blue-600/25 hover:shadow-blue-600/40 hover:-translate-y-1 flex items-center gap-2">
+                    <i class="fab fa-github"></i> 查看源码
+                </a>
+                <button onclick="replayDemo()" class="px-8 py-3.5 rounded-xl border border-gray-600 hover:border-gray-400 hover:bg-white/5 text-gray-300 hover:text-white transition-all font-semibold flex items-center gap-2">
+                    <i class="fas fa-play"></i> 重播演示
+                </button>
+            </div>
+        </div>
+
+        <!-- 右侧：AI 终端模拟 -->
+        <div class="lg:w-1/2 w-full z-10">
+            <div class="glass-effect rounded-2xl overflow-hidden shadow-2xl border border-gray-700/50 transform transition-all hover:scale-[1.01] duration-500">
+                <!-- 终端头部 -->
+                <div class="bg-gray-900/90 px-5 py-4 flex items-center justify-between border-b border-gray-700/50">
+                    <div class="flex gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500 hover:bg-red-400 transition"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500 hover:bg-yellow-400 transition"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500 hover:bg-green-400 transition"></div>
+                    </div>
+                    <div class="text-xs text-gray-500 font-mono flex items-center gap-2">
+                        <i class="fas fa-lock"></i> ai-assistant.js
+                    </div>
+                </div>
+
+                <!-- 终端内容区 -->
+                <div class="p-6 h-[450px] overflow-y-auto font-mono text-sm bg-gray-950/60 relative" id="terminal-content">
+                    <!-- 系统初始化信息 -->
+                    <div class="mb-6 text-gray-500 space-y-1 select-none">
+                        <p>> Initializing Mego AI Core v2.4.1...</p>
+                        <p>> Loading Tailwind CSS modules... <span class="text-green-500">Done</span></p>
+                        <p>> Connecting to Halo API... <span class="text-green-500">Connected</span></p>
+                        <p>> System Ready. Waiting for input...</p>
+                    </div>
+
+                    <!-- 动态对话容器 -->
+                    <div id="chat-history" class="space-y-4"></div>
+
+                    <!-- 输入中指示器 -->
+                    <div class="flex items-center mt-4 hidden" id="typing-indicator">
+                        <div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce mr-1"></div>
+                        <div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce mr-1" style="animation-delay: 0.1s"></div>
+                        <div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                    </div>
+                </div>
+
+                <!-- 底部输入框模拟 -->
+                <div class="p-4 bg-gray-900/80 border-t border-gray-700/50 flex items-center gap-3">
+                    <span class="text-blue-400 font-bold">></span>
+                    <span class="text-gray-500 animate-pulse">AI is analyzing project structure...</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 底部技术栈 -->
+    <footer class="border-t border-gray-800/50 bg-black/20 py-10 mt-auto">
+        <div class="container mx-auto px-6 text-center">
+            <p class="text-gray-500 mb-6 text-xs font-bold uppercase tracking-[0.2em]">Powered By</p>
+            <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-700">
+                <div class="flex flex-col items-center gap-2 hover:text-orange-500 transition hover:-translate-y-1">
+                    <i class="fab fa-html5 text-3xl"></i>
+                    <span class="text-xs">HTML5</span>
+                </div>
+                <div class="flex flex-col items-center gap-2 hover:text-blue-500 transition hover:-translate-y-1">
+                    <i class="fab fa-css3-alt text-3xl"></i>
+                    <span class="text-xs">Tailwind</span>
+                </div>
+                <div class="flex flex-col items-center gap-2 hover:text-yellow-400 transition hover:-translate-y-1">
+                    <i class="fab fa-js text-3xl"></i>
+                    <span class="text-xs">ES6+</span>
+                </div>
+                <div class="flex flex-col items-center gap-2 hover:text-green-500 transition hover:-translate-y-1">
+                    <i class="fas fa-leaf text-3xl"></i>
+                    <span class="text-xs">Thymeleaf</span>
+                </div>
+                <div class="flex flex-col items-center gap-2 hover:text-blue-400 transition hover:-translate-y-1">
+                    <i class="fas fa-cube text-3xl"></i>
+                    <span class="text-xs">Halo 2.0</span>
+                </div>
+            </div>
+            <p class="mt-8 text-gray-600 text-xs">
+                &copy; 2025 Theme Mego. Designed for Halo.
+            </p>
+        </div>
+    </footer>
+
+    <!-- 脚本逻辑 -->
+    <script>
+        const chatHistory = document.getElementById('chat-history');
+        const typingIndicator = document.getElementById('typing-indicator');
+        const terminalContent = document.getElementById('terminal-content');
+
+        // 对话脚本
+        const dialogues = [
+            { role: 'user', text: '你好，请简要介绍一下 Theme Mego 这个项目。' },
+            { role: 'ai', text: 'Theme Mego 是一款专为 Halo 2.0 打造的现代化博客主题。它采用了 Tailwind CSS 进行原子化样式开发，结合 Thymeleaf 模板引擎实现高效的服务端渲染。' },
+            { role: 'user', text: '这个项目的技术难点在哪里？' },
+            { role: 'ai', text: '主要在于**响应式设计的细节打磨**与**性能优化**。我实现了深色模式的无缝切换、复杂的 Hero 视差动画，以及模块化的组件设计，确保代码的可维护性与扩展性。' },
+            { role: 'user', text: '为什么要为 HR 制作这个页面？' },
+            { role: 'ai', text: '为了展示**产品思维**。通常开发环境的入口是空白的，但我将其转化为一个展示页。这表明我不仅关注代码实现，更关注用户体验和每一个展示自我的机会。' },
+            { role: 'user', text: '听起来不错，如何联系开发者？' },
+            { role: 'ai', text: '您可以查看左侧的 GitHub 链接，或者直接通过简历上的联系方式找到我。期待与您的进一步沟通！🚀' }
+        ];
+
+        let isPlaying = false;
+
+        // 打字机效果函数
+        async function typeText(element, text, speed = 20) {
+            // 解析简单的 Markdown 风格加粗
+            const parts = text.split(/(\*\*.*?\*\*)/g);
+
+            for (const part of parts) {
+                if (part.startsWith('**') && part.endsWith('**')) {
+                    const boldSpan = document.createElement('span');
+                    boldSpan.className = 'text-blue-400 font-bold';
+                    element.appendChild(boldSpan);
+                    const content = part.slice(2, -2);
+                    for (let i = 0; i < content.length; i++) {
+                        boldSpan.textContent += content.charAt(i);
+                        await new Promise(r => setTimeout(r, speed));
+                    }
+                } else {
+                    const span = document.createElement('span');
+                    element.appendChild(span);
+                    for (let i = 0; i < part.length; i++) {
+                        span.textContent += part.charAt(i);
+                        await new Promise(r => setTimeout(r, speed));
+                    }
+                }
+            }
+        }
+
+        async function startAIDemo() {
+            if (isPlaying) return;
+            isPlaying = true;
+            chatHistory.innerHTML = ''; // 清空历史
+
+            for (const line of dialogues) {
+                // 创建消息容器
+                const msgWrapper = document.createElement('div');
+                msgWrapper.className = `flex w-full ${line.role === 'user' ? 'justify-end' : 'justify-start'}`;
+
+                // 创建消息气泡
+                const bubble = document.createElement('div');
+                bubble.className = `max-w-[85%] px-4 py-3 rounded-2xl text-sm leading-relaxed shadow-md ${
+                    line.role === 'user'
+                    ? 'bg-blue-600 text-white rounded-tr-none'
+                    : 'bg-gray-800 text-gray-200 rounded-tl-none border border-gray-700'
+                }`;
+
+                // 如果是 AI，先显示头像和名字
+                if (line.role === 'ai') {
+                    const aiHeader = document.createElement('div');
+                    aiHeader.className = 'flex items-center gap-2 mb-1 text-xs text-blue-400 font-bold';
+                    aiHeader.innerHTML = '<i class="fas fa-robot"></i> Mego AI';
+                    bubble.appendChild(aiHeader);
+                }
+
+                msgWrapper.appendChild(bubble);
+                chatHistory.appendChild(msgWrapper);
+
+                // 自动滚动
+                terminalContent.scrollTo({ top: terminalContent.scrollHeight, behavior: 'smooth' });
+
+                if (line.role === 'ai') {
+                    // AI 思考时间
+                    typingIndicator.classList.remove('hidden');
+                    terminalContent.scrollTo({ top: terminalContent.scrollHeight, behavior: 'smooth' });
+                    await new Promise(r => setTimeout(r, 600 + Math.random() * 500));
+                    typingIndicator.classList.add('hidden');
+
+                    // AI 打字
+                    await typeText(bubble, line.text);
+                } else {
+                    // 用户直接显示（模拟快速输入）
+                    bubble.textContent = line.text;
+                    await new Promise(r => setTimeout(r, 500));
+                }
+
+                // 每一句说完后的停顿
+                await new Promise(r => setTimeout(r, 800));
+            }
+            isPlaying = false;
+        }
+
+        function replayDemo() {
+            startAIDemo();
+        }
+
+        // 页面加载 1 秒后自动开始
+        window.addEventListener('load', () => {
+            setTimeout(startAIDemo, 1000);
+        });
+    </script>
+</body>
+</html>
