@@ -1,234 +1,190 @@
-<header
-  class="fixed top-0 z-50 w-full border-b border-black/10 bg-gray-100 backdrop-blur-[20px] transition-colors duration-200 dark:border-b dark:border-white/10 dark:bg-gray-900"
->
-  <div class="mx-auto max-w-6xl p-4 sm:px-8">
-    <div class="flex items-center justify-between">
-      <a class="flex shrink-0 items-center space-x-2" th:href="${site.url}">
-        <th:block th:if="${theme.config.index_info.info_site.site_enabled == 'default' or theme.config.index_info.info_site.site_enabled == 'custom'}">
-          <img
-            alt="logo"
-            th:classappend="${theme.config.index_info.info_site.site_enabled == 'default' ? 'size-9 md:size-8 rounded-xl md:rounded-2xl bg-cover lg:h-10 lg:w-10': 'bg-cover h-8 lg:h-10'}"
-            th:src="${theme.config.index_info.info_site.site_enabled == 'custom' ? theme.config.index_info.custom.custom_logo : (theme.config.index_info.default.logo ?: site.logo)}"
-            th:if="${theme.config.index_info.info_site.site_enabled == 'custom' ? not #strings.isEmpty(theme.config.index_info.custom.custom_logo) : not #strings.isEmpty(theme.config.index_info.default.logo ?: site.logo)}"
-          />
-          <div th:if="${theme.config.index_info.info_site.site_enabled == 'default'}">
-            <span class="font-display text-base font-bold sm:text-xl" th:text="${theme.config.index_info.default.title ?: site.title}"></span>
-            <div
-              class="text-xs text-gray-900 dark:text-white/40"
-              th:if="not ${#strings.isEmpty(theme.config.index_info.default.description ?: site.subtitle)}"
-              th:text="${theme.config.index_info.default.description ?: site.subtitle}"
-            ></div>
-          </div>
-        </th:block>
-      </a>
-      <ul class="hidden items-center justify-center gap-2 whitespace-nowrap lg:flex lg:text-base" th:with="menu = ${menuFinder.getPrimary()}">
-        <th:block th:each="menuItem,iter : ${menu.menuItems}">
-          <li class="menuItem" th:if="${#lists.isEmpty(menuItem.children)}">
-            <a class="flex cursor-pointer items-center px-4 py-2" th:href="@{${menuItem.status.href}}" th:target="${menuItem.spec.target?.value}">
-              <th:block th:if="${not #strings.isEmpty(#annotations.getOrDefault(menuItem, 'MenuFont', ''))}">
-                <span class="mr-1 inline-block">
-                  <th:block th:utext="${#annotations.getOrDefault(menuItem, 'MenuFont', '')}"></th:block>
-                </span>
-              </th:block>
-              <span class="font-medium" th:text="${menuItem.status.displayName}"></span>
-            </a>
-          </li>
-          <li class="menuItem mx-2" th:unless="${#lists.isEmpty(menuItem.children)}">
-            <div class="relative flex cursor-pointer items-center justify-between px-4 py-2 font-medium" th:attr="id=|${menuItem.metadata.name}|" th:onclick="toggleMenu(this)">
-              <th:block th:if="${not #strings.isEmpty(#annotations.getOrDefault(menuItem, 'MenuFont', ''))}">
-                <span class="mr-1 inline-block">
-                  <th:block th:utext="${#annotations.getOrDefault(menuItem, 'MenuFont', '')}"></th:block>
-                </span>
-              </th:block>
-              <span class="h-full w-full" th:target="${menuItem.spec.target?.value}" th:text="${menuItem.status.displayName}"></span>
-              <svg class="ml-2" height="16" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  clip-rule="evenodd"
-                  d="M4.293 7.793a1 1 0 0 1 1.414 0L12 14.086l6.293-6.293a1 1 0 1 1 1.414 1.414L13.414 15.5a2 2 0 0 1-2.828 0L4.293 9.207a1 1 0 0 1 0-1.414"
-                  fill="currentColor"
-                  fill-rule="evenodd"
-                />
-              </svg>
-              <ul
-                class="pointer-events-none absolute top-full left-1/2 z-10 mt-2 w-44 -translate-x-1/2 translate-y-1 overflow-hidden rounded-2xl bg-white p-2 opacity-0 shadow-lg transition duration-200 ease-out dark:bg-gray-800"
-                th:attr="id=|children-${menuItem.metadata.name}|"
-              >
-                <li class="group flex rounded-lg text-sm leading-6" th:each="childMenuItem : ${menuItem.children}">
-                  <a
-                    class="flex-auto rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-white/5"
-                    th:classappend="${not #strings.isEmpty(#annotations.getOrDefault(childMenuItem, 'MenuFont', ''))} ? 'flex items-center mx-1 overflow-hidden' : 'text-center'"
-                    th:href="@{${childMenuItem.status.href}}"
-                    th:target="${childMenuItem.spec.target?.value}"
-                  >
-                    <th:block th:if="${not #strings.isEmpty(#annotations.getOrDefault(childMenuItem, 'MenuFont', ''))}">
-                      <span class="mr-1 inline-block">
-                        <th:block th:utext="${#annotations.getOrDefault(childMenuItem, 'MenuFont', '')}"></th:block>
-                      </span>
-                    </th:block>
-                    <span class="block w-full overflow-hidden font-semibold text-gray-900 dark:text-white/70" th:text="${childMenuItem.status.displayName}"></span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </li>
-        </th:block>
-      </ul>
-      <div class="flex items-center gap-2 md:gap-4">
-        <div
-          th:if="${theme.config.index_info.info_setting.theme_setting == null or theme.config.index_info.info_setting.theme_setting == false }"
-          class="relative h-5 w-10 cursor-pointer rounded-full bg-gray-300 transition-colors duration-150 ease-out will-change-[background-color] select-none dark:bg-gray-600"
-          id="theme-toggle"
-        >
-          <div
-            class="absolute top-0.5 left-0.5 flex h-4 w-4 transform-gpu items-center justify-center rounded-full bg-white text-xs shadow-md transition-transform duration-150 ease-out will-change-transform dark:bg-orange-400"
-            id="theme-toggle-slider"
-          ></div>
+<header>
+    <style>
+        /* 玻璃拟态 */
+        .glass-effect {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        /* 移动端菜单动画 */
+        #mobile-menu {
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+        #mobile-menu.hidden-menu {
+            transform: translateY(-20px);
+            opacity: 0;
+            pointer-events: none;
+        }
+        #mobile-menu.visible-menu {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* 下拉菜单样式 */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 200px;
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 8px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+        .dropdown-group:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            color: #cbd5e1;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+    </style>
+
+    <!-- 导航栏 (Fixed) -->
+    <nav class="w-full py-6 px-6 md:px-12 flex justify-between items-center glass-effect fixed top-0 z-50 transition-all duration-300" id="navbar">
+        <div class="flex items-center gap-3">
+            <th:block th:with="customLogo=${theme.config.index_info.custom.custom_logo}, defaultLogo=${theme.config.index_info.default.logo ?: site.logo}">
+                <img th:if="${not #strings.isEmpty(customLogo)}" th:src="${customLogo}" alt="Logo" class="w-10 h-10 rounded-lg object-cover shadow-lg shadow-blue-500/30">
+                <img th:if="${#strings.isEmpty(customLogo) and not #strings.isEmpty(defaultLogo)}" th:src="${defaultLogo}" alt="Logo" class="w-10 h-10 rounded-lg object-cover shadow-lg shadow-blue-500/30">
+                <div th:if="${#strings.isEmpty(customLogo) and #strings.isEmpty(defaultLogo)}" class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-500/30">
+                    <i class="fas fa-robot"></i>
+                </div>
+            </th:block>
+            <span class="text-xl font-bold tracking-tight text-white hidden md:block">Sivan's AI Space</span>
+            <span class="text-lg font-bold tracking-tight text-white md:hidden">Sivan AI</span>
         </div>
-        <button class="lg:hidden" id="mobile-btn">
-          <svg class="h-5.5 w-6 cursor-pointer transition-opacity duration-300 hover:opacity-80 dark:text-white/80" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-            <path
-              fill="currentColor"
-              id="icon-bar"
-              d="M384 224L480 224L480 160L384 160L384 224zM96 224L96 144C96 117.5 117.5 96 144 96L496 96C522.5 96 544 117.5 544 144L544 240C544 266.5 522.5 288 496 288L144 288C117.5 288 96 266.5 96 240L96 224zM256 480L480 480L480 416L256 416L256 480zM96 480L96 400C96 373.5 117.5 352 144 352L496 352C522.5 352 544 373.5 544 400L544 496C544 522.5 522.5 544 496 544L144 544C117.5 544 96 522.5 96 496L96 480z"
-            />
-            <path
-              class="hidden"
-              id="icon-close"
-              fill="currentColor"
-              d="M320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576zM231 231C240.4 221.6 255.6 221.6 264.9 231L319.9 286L374.9 231C384.3 221.6 399.5 221.6 408.8 231C418.1 240.4 418.2 255.6 408.8 264.9L353.8 319.9L408.8 374.9C418.2 384.3 418.2 399.5 408.8 408.8C399.4 418.1 384.2 418.2 374.9 408.8L319.9 353.8L264.9 408.8C255.5 418.2 240.3 418.2 231 408.8C221.7 399.4 221.6 384.2 231 374.9L286 319.9L231 264.9C221.6 255.5 221.6 240.3 231 231z"
-            />
-          </svg>
-        </button>
-        <a class="hidden lg:block" href="javascript:SearchWidget.open()" th:if="${pluginFinder.available('PluginSearchWidget')}" th:title="#{fragment.header.search}">
-          <i class="fas fa-search dark:text-white/80"></i>
-        </a>
-        <th:block th:if="${theme.config.index_info.info_setting.u_enabled == true}">
-          <div class="relative">
-            <i class="fa-solid fa-user-gear mr-2 cursor-pointer px-1 transition-opacity duration-300 hover:opacity-80 dark:text-white/80" id="user-quick-button"></i>
-            <ul
-              id="user-quick-menu"
-              class="pointer-events-none absolute top-full right-0 z-10 mt-2 w-32 translate-y-1 overflow-hidden rounded-2xl bg-white p-2 opacity-0 shadow-lg transition duration-200 ease-out 2xl:right-auto 2xl:left-1/2 2xl:-translate-x-1/2 dark:bg-gray-800"
-            >
-              <li class="group flex rounded-lg text-sm leading-6">
-                <a
-                  class="flex flex-auto items-center gap-1 overflow-hidden rounded-lg p-2 px-4 hover:bg-gray-100 dark:hover:bg-white/5"
-                  sec:authorize="isAnonymous()"
-                  href="/signup"
-                  onclick="this.href = '/signup?redirect_uri=' + encodeURIComponent(window.location.href)"
-                >
-                  <i class="fa-solid fa-user-plus ml-2"></i>
-                  <span class="block overflow-hidden text-gray-900 dark:text-white/70" th:text="#{fragment.header.user.register}"></span>
-                </a>
-              </li>
-              <li class="group flex rounded-lg text-sm leading-6">
-                <a
-                  class="flex flex-auto items-center gap-1 overflow-hidden rounded-lg p-2 px-4 hover:bg-gray-100 dark:hover:bg-white/5"
-                  sec:authorize="isAnonymous()"
-                  href="/login"
-                  onclick="this.href = '/login?redirect_uri=' + encodeURIComponent(window.location.href)"
-                >
-                  <i class="fa-solid fa-right-from-bracket ml-2"></i>
-                  <span class="block overflow-hidden text-gray-900 dark:text-white/70" th:text="#{fragment.header.user.login}"></span>
-                </a>
-              </li>
-              <li class="group flex rounded-lg text-sm leading-6">
-                <a
-                  class="flex flex-auto items-center gap-1 overflow-hidden rounded-lg p-2 px-4 hover:bg-gray-100 dark:hover:bg-white/5"
-                  sec:authorize="isAuthenticated()"
-                  href="/uc"
-                >
-                  <i class="fa-solid fa-gear ml-2 scale-x-[-1]"></i>
-                  <span class="block overflow-hidden text-gray-900 dark:text-white/70" th:text="#{fragment.header.user.profile}"></span>
-                </a>
-              </li>
-              <li class="group flex rounded-lg text-sm leading-6">
-                <a
-                  class="flex flex-auto items-center gap-1 overflow-hidden rounded-lg p-2 px-4 hover:bg-gray-100 dark:hover:bg-white/5"
-                  sec:authorize="isAuthenticated()"
-                  href="/logout"
-                >
-                  <i class="fa-solid fa-right-from-bracket ml-2 scale-x-[-1]"></i>
-                  <span class="block overflow-hidden text-gray-900 dark:text-white/70" th:text="#{fragment.header.user.logout}"></span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </th:block>
-      </div>
-    </div>
-  </div>
-</header>
-<div class="pointer-events-none fixed inset-0 z-40 overflow-hidden opacity-0 lg:hidden" id="mobile-menu">
-  <div class="absolute inset-0 bg-black/50 opacity-0 backdrop-blur-md transition-opacity will-change-[opacity]" id="mobile-backdrop"></div>
-  <div
-    class="border-white-dark fixed top-0 right-0 h-full w-64 max-w-full translate-x-full transform border-l border-solid bg-gray-100 backdrop-blur-xl transition-transform duration-300 ease-in-out md:w-96 dark:bg-gray-900"
-    id="mobile-panel"
-  >
-    <div class="flex h-full w-full flex-col justify-center px-10">
-      <ul class="space-y-2" th:with="menu = ${menuFinder.getPrimary()}">
-        <li
-          class="flex items-center justify-between py-2 text-lg font-medium"
-          th:if="${pluginFinder.available('PluginSearchWidget') and theme.config.index_info.info_setting.s_enabled == true}"
-        >
-          <a href="javascript:SearchWidget.open()" th:text="#{fragment.header.search}" th:title="#{fragment.header.search}"></a>
-          <i class="fas fa-search text-sm"></i>
-        </li>
-        <th:block th:each="menuItem,iter : ${menu.menuItems}">
-          <li class="block py-2 text-lg font-medium" th:if="${#lists.isEmpty(menuItem.children)}">
-            <a class="flex cursor-pointer items-center" th:href="@{${menuItem.status.href}}" th:target="${menuItem.spec.target?.value}">
-              <th:block th:if="${not #strings.isEmpty(#annotations.getOrDefault(menuItem, 'MenuFont', ''))}">
-                <span class="mr-1 inline-block">
-                  <th:block th:utext="${#annotations.getOrDefault(menuItem, 'MenuFont', '')}"></th:block>
-                </span>
-              </th:block>
-              <span class="font-medium" th:text="${menuItem.status.displayName}"></span>
+
+        <!-- PC 菜单 -->
+        <div class="hidden md:flex space-x-8 text-sm font-medium text-gray-400 items-center">
+            <a href="/" class="hover:text-white transition-colors">首页</a>
+            <a href="/archives" class="hover:text-white transition-colors">文章全览</a>
+            <a href="https://blog.csdn.net/weixin_62633072" target="_blank" class="hover:text-white transition-colors flex items-center gap-1">
+                技术博客 <i class="fas fa-external-link-alt text-xs"></i>
             </a>
-          </li>
-          <li class="menu-item block py-2 text-lg font-medium" th:unless="${#lists.isEmpty(menuItem.children)}">
-            <div class="flex cursor-pointer items-center justify-between">
-              <th:block th:if="${not #strings.isEmpty(#annotations.getOrDefault(menuItem, 'MenuFont', ''))}">
-                <span class="mr-1 inline-block">
-                  <th:block th:utext="${#annotations.getOrDefault(menuItem, 'MenuFont', '')}"></th:block>
-                </span>
-              </th:block>
-              <div
-                class="h-full w-full"
-                th:attr="id=|more-toggle-${menuItem.metadata.name}|"
-                th:target="${menuItem.spec.target?.value}"
-                th:text="${menuItem.status.displayName}"
-              ></div>
-              <svg
-                class="transform transition-transform duration-300"
-                height="16"
-                th:attr="id=|more-arrow-${menuItem.metadata.name}|"
-                viewBox="0 0 12 12"
-                width="16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M4.7 10c-.2 0-.4-.1-.5-.2c-.3-.3-.3-.8 0-1.1L6.9 6L4.2 3.3c-.3-.3-.3-.8 0-1.1s.8-.3 1.1 0l3.3 3.2c.3.3.3.8 0 1.1L5.3 9.7q-.3.3-.6.3" fill="currentColor" />
-              </svg>
+
+            <!-- AI 工具箱下拉菜单 -->
+            <div class="relative dropdown-group py-2">
+                <button class="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition-colors focus:outline-none">
+                    AI 工具箱 <i class="fas fa-chevron-down text-xs"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <a href="https://chat.openai.com/" target="_blank" class="dropdown-item">
+                        <i class="fas fa-robot w-6" style="color: #4ade80;"></i> ChatGPT
+                    </a>
+                    <a href="https://claude.ai/" target="_blank" class="dropdown-item">
+                        <i class="fas fa-brain w-6" style="color: #fb923c;"></i> Claude
+                    </a>
+                    <a href="https://kimi.moonshot.cn/" target="_blank" class="dropdown-item">
+                        <i class="fas fa-moon w-6" style="color: #60a5fa;"></i> Kimi
+                    </a>
+                    <a href="https://www.doubao.com/" target="_blank" class="dropdown-item">
+                        <i class="fas fa-comment-dots w-6" style="color: #c084fc;"></i> 豆包
+                    </a>
+                    <a href="https://yiyan.baidu.com/" target="_blank" class="dropdown-item">
+                        <i class="fas fa-dragon w-6" style="color: #3b82f6;"></i> 文心一言
+                    </a>
+                    <a href="https://tongyi.aliyun.com/" target="_blank" class="dropdown-item">
+                        <i class="fas fa-cloud w-6" style="color: #818cf8;"></i> 通义千问
+                    </a>
+                    <a href="https://www.midjourney.com/" target="_blank" class="dropdown-item">
+                        <i class="fas fa-paint-brush w-6" style="color: #f472b6;"></i> Midjourney
+                    </a>
+                </div>
             </div>
-            <ul
-              class="border-apple-gray-300 pointer-events-none max-h-0 overflow-hidden border-l border-dashed pl-3 text-base font-medium opacity-0 transition-all duration-300 ease-in-out"
-            >
-              <li class="py-2 first:pt-3" th:each="childMenuItem : ${menuItem.children}">
-                <a
-                  th:classappend="${not #strings.isEmpty(#annotations.getOrDefault(childMenuItem, 'MenuFont', ''))} ? 'flex items-center' : ''"
-                  th:href="@{${childMenuItem.status.href}}"
-                  th:target="${childMenuItem.spec.target?.value}"
-                >
-                  <th:block th:if="${not #strings.isEmpty(#annotations.getOrDefault(childMenuItem, 'MenuFont', ''))}">
-                    <span class="mr-1 inline-block">
-                      <th:block th:utext="${#annotations.getOrDefault(childMenuItem, 'MenuFont', '')}"></th:block>
-                    </span>
-                  </th:block>
-                  <span class="block font-semibold text-gray-900 dark:text-white/70" th:text="${childMenuItem.status.displayName}"></span>
-                </a>
-              </li>
-            </ul>
-          </li>
-        </th:block>
-      </ul>
+        </div>
+
+        <!-- 移动端菜单按钮 -->
+        <button id="mobile-menu-btn" class="md:hidden text-gray-300 hover:text-white focus:outline-none">
+            <i class="fas fa-bars text-2xl"></i>
+        </button>
+    </nav>
+
+    <!-- 移动端下拉菜单 -->
+    <div id="mobile-menu" class="fixed top-[88px] left-0 w-full glass-effect border-t border-gray-700/50 z-40 hidden-menu md:hidden">
+        <div class="flex flex-col p-6 space-y-4 text-center">
+            <a href="/" class="text-gray-300 hover:text-white py-2 border-b border-gray-700/30">首页</a>
+            <a href="/archives" class="text-gray-300 hover:text-white py-2 border-b border-gray-700/30">文章全览</a>
+            <a href="https://blog.csdn.net/weixin_62633072" target="_blank" class="text-gray-300 hover:text-white py-2 border-b border-gray-700/30">
+                技术博客 (CSDN) <i class="fas fa-external-link-alt text-xs ml-1"></i>
+            </a>
+
+            <!-- 移动端 AI 工具箱 (折叠式) -->
+            <div class="py-2">
+                <div class="text-blue-400 font-bold mb-3">AI 工具箱</div>
+                <div class="grid grid-cols-2 gap-3">
+                    <a href="https://chat.openai.com/" target="_blank" class="bg-white/5 p-2 rounded-lg text-sm text-gray-300 flex items-center gap-2">
+                        <i class="fas fa-robot" style="color: #4ade80;"></i> ChatGPT
+                    </a>
+                    <a href="https://claude.ai/" target="_blank" class="bg-white/5 p-2 rounded-lg text-sm text-gray-300 flex items-center gap-2">
+                        <i class="fas fa-brain" style="color: #fb923c;"></i> Claude
+                    </a>
+                    <a href="https://kimi.moonshot.cn/" target="_blank" class="bg-white/5 p-2 rounded-lg text-sm text-gray-300 flex items-center gap-2">
+                        <i class="fas fa-moon" style="color: #60a5fa;"></i> Kimi
+                    </a>
+                    <a href="https://www.doubao.com/" target="_blank" class="bg-white/5 p-2 rounded-lg text-sm text-gray-300 flex items-center gap-2">
+                        <i class="fas fa-comment-dots" style="color: #c084fc;"></i> 豆包
+                    </a>
+                    <a href="https://yiyan.baidu.com/" target="_blank" class="bg-white/5 p-2 rounded-lg text-sm text-gray-300 flex items-center gap-2">
+                        <i class="fas fa-dragon" style="color: #3b82f6;"></i> 文心一言
+                    </a>
+                    <a href="https://tongyi.aliyun.com/" target="_blank" class="bg-white/5 p-2 rounded-lg text-sm text-gray-300 flex items-center gap-2">
+                        <i class="fas fa-cloud" style="color: #818cf8;"></i> 通义千问
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
+
+    <script>
+        // 移动端菜单控制
+        (function() {
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (mobileMenuBtn && mobileMenu) {
+                const mobileIcon = mobileMenuBtn.querySelector('i');
+
+                function toggleMobileMenu() {
+                    const isHidden = mobileMenu.classList.contains('hidden-menu');
+                    if (isHidden) {
+                        mobileMenu.classList.remove('hidden-menu');
+                        mobileMenu.classList.add('visible-menu');
+                        if (mobileIcon) {
+                            mobileIcon.classList.remove('fa-bars');
+                            mobileIcon.classList.add('fa-times');
+                        }
+                    } else {
+                        mobileMenu.classList.add('hidden-menu');
+                        mobileMenu.classList.remove('visible-menu');
+                        if (mobileIcon) {
+                            mobileIcon.classList.add('fa-bars');
+                            mobileIcon.classList.remove('fa-times');
+                        }
+                    }
+                }
+
+                mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+            }
+        })();
+    </script>
+</header>
