@@ -318,12 +318,12 @@
                     </p>
 
                     <div class="flex flex-wrap gap-4 pt-4">
-                        <a href="/archives" class="px-8 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all shadow-lg shadow-blue-600/25 hover:shadow-blue-600/40 hover:-translate-y-1 flex items-center gap-2">
-                            <i class="fas fa-book-open"></i> 浏览 AI 文章
-                        </a>
-                        <button onclick="replayDemo()" class="px-8 py-3.5 rounded-xl border border-gray-600 hover:border-gray-400 hover:bg-white/5 text-gray-300 hover:text-white transition-all font-semibold flex items-center gap-2">
+                        <button onclick="window.location.href='/chatgpt'" class="px-8 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all shadow-lg shadow-blue-600/25 hover:shadow-blue-600/40 hover:-translate-y-1 flex items-center gap-2">
                             <i class="fas fa-terminal"></i> 唤醒 AI
                         </button>
+                        <a href="/archives" class="px-8 py-3.5 rounded-xl border border-gray-600 hover:border-gray-400 hover:bg-white/5 text-gray-300 hover:text-white transition-all font-semibold flex items-center gap-2">
+                            <i class="fas fa-book-open"></i> 浏览文章
+                        </a>
                     </div>
 
                     <!-- 技术栈图标 -->
@@ -571,7 +571,7 @@
             { role: 'user', text: '这里有什么？' },
             { role: 'ai', text: '这里是 Sivan 的 **数字后花园**。你可以看到一些 AI 工具的使用体验，或者一些简单的 Demo。至于那些 ~~枯燥的~~ 硬核代码，请移步右上角的 **技术博客**。' },
             { role: 'user', text: '我想和你聊天。' },
-            { role: 'ai', text: '我现在还只是一个预设的脚本... 不过 Sivan 正在尝试接入真正的 LLM。你可以先点击左侧的 **唤醒 AI** 试试，更多功能敬请期待！🤖' }
+            { role: 'ai', text: '我现在还只是一个预设的脚本... 不过 Sivan 正在优化我 让我更符合预期。你可以先点击左侧的 **唤醒 AI** 和真正的我(LLM)聊天，更多功能敬请期待！🤖' }
         ];
 
         let isPlaying = false;
